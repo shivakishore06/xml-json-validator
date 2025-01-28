@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XML & JSON Validator</title>
+  <style>
+    .validator-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-family: monospace;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="validator-container">
+    <h2>XML & JSON Validator</h2>
+    <textarea id="input-data" placeholder="Paste your XML or JSON here..."></textarea>
+    <button onclick="validateInput()">Validate</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function validateInput() {
+      const input = document.getElementById('input-data').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      if (input.startsWith('<')) {
+        // Validate XML
+        try {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(input, 'application/xml');
+          const error = xmlDoc.getElementsByTagName('parsererror');
+
+          if (error.length > 0) {
+            resultDiv.innerHTML = '<span style="color: red;">Invalid XML</span>';
+          } else {
+            resultDiv.innerHTML = '<span style="color: green;">Valid XML</span>';
+          }
+        } catch (e) {
+          resultDiv.innerHTML = '<span style="color: red;">Invalid XML</span>';
+        }
+      } else {
+        // Validate JSON
+        try {
+          JSON.parse(input);
+          resultDiv.innerHTML = '<span style="color: green;">Valid JSON</span>';
+        } catch (e) {
+          resultDiv.innerHTML = '<span style="color: red;">Invalid JSON</span>';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
